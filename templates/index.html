@@ -1,57 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Video Link Extractor</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: white;
-            text-align: center;
-        }
-        .container {
-            margin-top: 100px;
-        }
-        input[type="text"] {
-            padding: 12px;
-            width: 60%;
-            border-radius: 10px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
-        button {
-            padding: 12px 20px;
-            background-color: #1abc9c;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        a {
-            color: #1abc9c;
-            text-decoration: none;
-            display: block;
-            margin-top: 20px;
-            font-size: 18px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Video Downloader</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1>🎬 Video Link Extractor</h1>
-        <form method="POST">
-            <input type="text" name="url" placeholder="Paste your video URL here..." required>
-            <button type="submit">Get Video Link</button>
-        </form>
-        {% if video_url %}
-            <a href="{{ video_url }}" target="_blank">Click here to open the video directly 🔗</a>
-        {% endif %}
+  <div class="container">
+    <div class="glass-card">
+      <h1>🚀 Multi-Platform Video Downloader</h1>
+      <form method="POST">
+        <input type="text" name="url" placeholder="Paste your video link here..." required>
+        <button type="submit">Download 🎬</button>
+      </form>
+      {% if error %}
+        <p class="error">{{ error }}</p>
+      {% endif %}
     </div>
+  </div>
 </body>
 </html>

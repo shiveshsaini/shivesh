@@ -1,32 +1,26 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, send_file
 import yt_dlp
+import os
 
 app = Flask(__name__)
 
-def get_direct_link(url):
-    ydl_opts = {
-        'quiet': True,
-        'skip_download': True,
-        'forceurl': True,
-        'noplaylist': True,
-        'extract_flat': True,
-    }
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
-        if 'url' in info:
-            return info['url']
-        elif 'entries' in info:
-            return info['entries'][0]['url']
-        else:
-            return None
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    video_url = None
+    error = None
     if request.method == 'POST':
-        input_url = request.form['url']
-        video_url = get_direct_link(input_url)
-    return render_template('index.html', video_url=video_url)
+        url = request.form.get('url')
+        if not url:
+            error = "Please enter a video URL."
+            return render_template('index.html', error=error)
+        try:
+            ydl_opts = {'outtmpl': 'downloaded_video.%(ext)s'}
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=True)
+                filename = ydl.prepare_filename(info)
+            return send_file(filename, as_attachment=True)
+        except Exception as e:
+            error = "Failed to download video. Make sure the link is valid."
+    return render_template('index.html', error=error)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True)
